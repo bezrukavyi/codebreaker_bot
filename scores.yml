@@ -1,0 +1,8 @@
+---
+- :secret_code: '4541'
+  :attempts: 4
+  :hint_count: 2
+  :state: win
+  :answer: "++++"
+  :name: Ярослав
+  :date: 1478722240
