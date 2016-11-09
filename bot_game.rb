@@ -65,9 +65,10 @@ class Botguessing
       '--------------------',
       "#{score[:name]}",
       '--------------------',
+      "Date: #{Time.at(score[:date]).strftime("%d.%m.%y | %H:%M")}",
       "Attempts: #{score[:attempts]}",
       "Hint: #{score[:hint_count]}",
-      "Date: #{Time.at(score[:date]).strftime("%d %B %Y")}\n",
+      "Secret code: #{score[:secret_code]}\n",
     ].join("\n")
   end
 end

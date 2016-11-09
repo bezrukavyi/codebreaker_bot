@@ -12,7 +12,7 @@ Telegram::Bot::Client.run(token) do |bot|
 
     markup =
       Telegram::Bot::Types::ReplyKeyboardMarkup
-      .new(keyboard: [%w(hint scores save), ['new game'], ['give up']])
+      .new(keyboard: [%w(hint scores save rules), ['new game'], ['give up']])
 
     case message.text
     when /start/i
