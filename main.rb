@@ -5,7 +5,7 @@ require "telegram/bot"
 token = '268384989:AAHxzzJGWQiVw8lDKGg0S8xntboUDVJ_S20'
 
 Telegram::Bot::Client.run(token) do |bot|
-  bot_game = BotGame.new
+  bot_game = Botguessing.new
 
   bot.listen do |message|
     question = message.from.first_name
@@ -27,7 +27,7 @@ Telegram::Bot::Client.run(token) do |bot|
         text: bot_game.go(message.text))
 
     when /new game/i
-      bot_game = BotGame.new
+      bot_game = Botguessing.new
       bot.api.send_message(
         chat_id: message.chat.id,
         text: "#{bot_game.state}\nNew Game")
@@ -42,13 +42,13 @@ Telegram::Bot::Client.run(token) do |bot|
     when /rules/i
       bot.api.send_message(
         chat_id: message.chat.id,
-        text: BotGame::RULES.join("\n"))
+        text: Botguessing::RULES.join("\n"))
 
     when /save/i
       bot.api.send_message(
         chat_id: message.chat.id,
         text: "#{bot_game.save!(message.from.first_name)}")
-        bot_game = BotGame.new
+        bot_game = Botguessing.new
 
     when /scores/i
       bot.api.send_message(
@@ -56,7 +56,7 @@ Telegram::Bot::Client.run(token) do |bot|
       text: bot_game.scores)
 
     when /give up/i
-      bot_game = BotGame.new
+      bot_game = Botguessing.new
       bot.api.send_message(
         chat_id: message.chat.id,
         text: "Sorry, #{message.from.first_name}, but secret code was #{bot_game.game.secret_code}")

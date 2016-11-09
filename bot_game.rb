@@ -1,6 +1,6 @@
 require 'yaml'
 
-class BotGame
+class Botguessing
 
   attr_accessor :game
 
