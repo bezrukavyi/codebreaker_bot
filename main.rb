@@ -1,41 +1,52 @@
 require "codeguessing"
-require 'telegram_bot'
+require_relative 'bot_game'
+require "telegram/bot"
 
-class Game < Codeguessing::Game
-end
-@game = Game.new
+token = '268384989:AAHxzzJGWQiVw8lDKGg0S8xntboUDVJ_S20'
 
-bot = TelegramBot.new(token: '###')
-bot.get_updates(fail_silently: true) do |message|
-  puts "@#{message.from.username}: #{message.text}"
-  command = message.get_command_for(bot)
+Telegram::Bot::Client.run(token) do |bot|
+  bot_breaker = BotGame.new
 
-  message.reply do |reply|
-    case command
+  bot.listen do |message|
+    question = message.from.first_name
+
+    answers =
+      Telegram::Bot::Types::ReplyKeyboardMarkup
+      .new(keyboard: [%w(hint attempts scores), %w(start exit replay)])
+
+    case message.text
     when /start/i
-      game_message = "Attempts: #{@game.attempts} Hint: #{@game.hint_count}\nWrite your guess"
-      reply.text = game_message
-    when /^[1-6]{#{Game::MAX_SIZE}}$/s
-      answer = @game.guess(command)
-      game_message =
-        case @game.win?
-        when true
-          ["You win"]
-        when false
-          ["Game over"]
-        else
-          [
-            "Attempts: #{@game.attempts} Hint: #{@game.hint_count}\nWrite your guess",
-            "Answer: #{answer}"
-          ]
-        end
-      reply.text = game_message.join("\n")
+      bot.api.send_message(
+        chat_id: message.chat.id,
+        text: "Let's breake all secret")
+
+    when /^[1-6]{#{Codeguessing::Game::MAX_SIZE}}$/s
+      bot.api.send_message(
+        chat_id: message.chat.id,
+        text: bot_breaker.go(message.text))
+
+    when /replay/i
+      bot_breaker = TelegramGame.new
+      bot.api.send_message(
+        chat_id: message.chat.id,
+        text: "New Game\n#{bot_breaker.cur_score}")
+
     when /hint/i
-      reply.text = @game.hint
-    when /restart/i
-      @game = Game.new
+      hint = bot_breaker.game.hint
+      hint_msg = bot_breaker.cur_score + "Hint: #{hint}\n"
+      bot.api.send_message(
+        chat_id: message.chat.id,
+        text: hint_msg)
+
+    when /stop/i
+      bot.api.send_message(
+        chat_id: message.chat.id,
+        text: "Bye, #{message.from.first_name}")
+
+    else
+      bot.api.send_message(
+        chat_id: message.chat.id,
+        text: "I don't know what's mean #{message.text}")
     end
-    puts "sending #{reply.text.inspect} to @#{message.from.username}"
-    reply.send_with(bot)
   end
 end
