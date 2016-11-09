@@ -35,7 +35,7 @@ Telegram::Bot::Client.run(token) do |bot|
       bot_game = Botguessing.new
       bot.api.send_message(
         chat_id: message.chat.id,
-        text: "Bot maked secret code.\n#{bot_game.state}")
+        text: "Bot maked secret code.\nLet's guess!\n#{bot_game.state}")
 
     when /hint/i
       hint = bot_game.game.hint
