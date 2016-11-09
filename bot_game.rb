@@ -43,7 +43,7 @@ class Botguessing
   end
 
   def save!(name = 'Anonim')
-    return 'You cant save game' unless @game.win?
+    return 'If you want save result, you need win game' unless @game.win?
     score = @game.cur_score(name)
     @scores << score
     File.new(DATA_PATH, 'w') unless File.exist?(DATA_PATH)
