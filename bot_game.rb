@@ -12,10 +12,13 @@ class Botguessing
     "A '+' indicates an exact match: one of the numbers in the guess is the same as one of the numbers in the secret code and in the same position.",
     "A '-' indicates a number match: one of the numbers in the guess is the same as one of the numbers in the secret code but in a different position.",
     "A empty answer means that you nothing guessed",
-    "If you want get hint write 'hint'",
-    "If you want start game write your guess-number",
+    "If you want get hint write or click on keyboard 'hint'",
+    "If you want start game write or click on keyboard 'new game' ",
     '-----------------------------'
   ]
+
+  MAX_ATTEMPTS = Codeguessing::Game::MAX_ATTEMPTS
+  MAX_HINT = Codeguessing::Game::MAX_HINT
 
   def initialize
     @scores = load(DATA_PATH) || []
@@ -66,8 +69,8 @@ class Botguessing
       "#{score[:name]}",
       '--------------------',
       "Date: #{Time.at(score[:date]).strftime("%d.%m.%y | %H:%M")}",
-      "Attempts: #{score[:attempts]}",
-      "Hint: #{score[:hint_count]}",
+      "Used attempts: #{MAX_ATTEMPTS - score[:attempts]}",
+      "Used hint: #{MAX_HINT - score[:hint_count]}",
       "Secret code: #{score[:secret_code]}\n",
     ].join("\n")
   end
